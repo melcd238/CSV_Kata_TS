@@ -6,6 +6,6 @@ export class CustomerCsvFileWriter {
    constructor(private fileSystemWriter: FileSystemWriter) { }
 
     writeCustomers(fileName: string, customers: Customer[]) {
-        this.fileSystemWriter.writeLine(fileName,"Peter Wiles,12345697123");
+        this.fileSystemWriter.writeLine(fileName,`${customers[0].name},${customers[0].contactNumber}`);
     }
 }

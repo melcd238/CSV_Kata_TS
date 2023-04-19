@@ -10,12 +10,12 @@ import { CustomerCsvFileWriter } from './customer-csv-file-writer';
 import { FileSystemWriter } from './file-writer-interface';
 
 describe('CustomerCsvFileWriter', () => {
-    test("given one customer that should be write to given file", ()=>{
+    describe('one customer', () => {
+        test.each([
+            {customer: new Customer("Peter Wiles","12345697123"), expected :"Peter Wiles,12345697123"  },
+            {customer: new Customer("John Smith","45345697123"), expected :"John Smith,45345697123"}
+        ])("given customer $expected", ({customer, expected})=>{
         // Arrange
-        const customer = new Customer(
-            "Peter Wiles",
-            "12345697123"
-        )
         const fileSystemWriter: FileSystemWriter = {
             writeLine: jest.fn()
         }
@@ -24,7 +24,8 @@ describe('CustomerCsvFileWriter', () => {
         sut.writeCustomers("customers.csv",[customer]);
         // Assert
         expect(fileSystemWriter.writeLine).toHaveBeenCalledTimes(1);
-        expect(fileSystemWriter.writeLine).toBeCalledWith("customers.csv", "Peter Wiles,12345697123");
+        expect(fileSystemWriter.writeLine).toBeCalledWith("customers.csv", expected);
 
-    });
+        });
+   });
 });
