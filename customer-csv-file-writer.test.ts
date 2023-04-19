@@ -10,7 +10,7 @@ import { CustomerCsvFileWriter } from './customer-csv-file-writer';
 import { FileSystemWriter } from './file-writer-interface';
 
 describe('CustomerCsvFileWriter', () => {
-    test("?", ()=>{
+    test("given one customer that should be write to given file", ()=>{
         // Arrange
         const customer = new Customer(
             "Peter Wiles",
@@ -21,10 +21,10 @@ describe('CustomerCsvFileWriter', () => {
         }
         const sut = new CustomerCsvFileWriter(fileSystemWriter);
         // Act
-        sut.writeCustomers("",[customer]);
+        sut.writeCustomers("customers.csv",[customer]);
         // Assert
         expect(fileSystemWriter.writeLine).toHaveBeenCalledTimes(1);
-        expect(fileSystemWriter.writeLine).toBeCalledWith("", "Peter Wiles,12345697123");
+        expect(fileSystemWriter.writeLine).toBeCalledWith("customers.csv", "Peter Wiles,12345697123");
 
     });
 });
