@@ -28,4 +28,21 @@ describe('CustomerCsvFileWriter', () => {
 
         });
    });
+
+    describe('multiple customers', () => {
+        test("given two customers", ()=>{
+        // Arrange
+        const customers = [ new Customer("Peter Wiles","12345697123"), new Customer("John Smith","45345697123")];
+        const fileSystemWriter: FileSystemWriter = {
+            writeLine: jest.fn()
+        }
+        const sut = new CustomerCsvFileWriter(fileSystemWriter);
+        // Act
+        sut.writeCustomers("custs.csv",customers);
+        // Assert
+        expect(fileSystemWriter.writeLine).toHaveBeenCalledTimes(2);
+        expect(fileSystemWriter.writeLine).toBeCalledWith("custs.csv", "Peter Wiles,12345697123");
+        expect(fileSystemWriter.writeLine).toBeCalledWith("custs.csv", "John Smith,45345697123");
+       });
+   });
 });
