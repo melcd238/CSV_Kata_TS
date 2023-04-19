@@ -16,10 +16,8 @@ describe('CustomerCsvFileWriter', () => {
             {customer: new Customer("John Smith","45345697123"), expected :"John Smith,45345697123"}
         ])("given customer $expected", ({customer, expected})=>{
         // Arrange
-        const fileSystemWriter: FileSystemWriter = {
-            writeLine: jest.fn()
-        }
-        const sut = new CustomerCsvFileWriter(fileSystemWriter);
+        const fileSystemWriter = createFileSystemWriterMock();
+        const sut = createCustomerCsvFileWriterMock(fileSystemWriter);
         // Act
         sut.writeCustomers("customers.csv",[customer]);
         // Assert
@@ -33,10 +31,8 @@ describe('CustomerCsvFileWriter', () => {
         test("should write many customers", ()=>{
         // Arrange
         const customers = [ new Customer("Peter Wiles","12345697123"), new Customer("John Smith","45345697123"),  new Customer("Mel Donati","55566697123")];
-        const fileSystemWriter: FileSystemWriter = {
-            writeLine: jest.fn()
-        }
-        const sut = new CustomerCsvFileWriter(fileSystemWriter);
+        const fileSystemWriter = createFileSystemWriterMock();
+        const sut = createCustomerCsvFileWriterMock(fileSystemWriter);
         // Act
         sut.writeCustomers("custs.csv",customers);
         // Assert
@@ -47,3 +43,13 @@ describe('CustomerCsvFileWriter', () => {
        });
    });
 });
+
+function createFileSystemWriterMock() : FileSystemWriter {
+   return {
+         writeLine: jest.fn()
+   }
+}
+
+function createCustomerCsvFileWriterMock(fileSystemWriter : FileSystemWriter) {
+    return new CustomerCsvFileWriter(fileSystemWriter);
+}
