@@ -10,6 +10,19 @@ import { CustomerCsvFileWriter } from './customer-csv-file-writer';
 import { FileSystemWriter } from './file-writer-interface';
 
 describe('CustomerCsvFileWriter', () => {
+    describe('no customers', () => {
+        test('should throw an error when no customers are provided', () => {
+        // Arrange
+        const fileSystemWriter = createFileSystemWriterMock();
+        const sut = createCustomerCsvFileWriterMock(fileSystemWriter);
+        const fileName = "customers.csv";
+        // Act
+        const action = () => sut.writeCustomers(fileName,[]);
+        // Assert
+        expect(action).toThrowError("No customers provided");
+        expect(fileSystemWriter.writeLine).not.toHaveBeenCalled();
+        });
+    });
     describe('one customer', () => {
         test.each([
             {customer: createCustomer("Peter Wiles","12345697123")},
