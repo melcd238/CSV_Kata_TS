@@ -7,7 +7,10 @@ export class CustomerCsvFileWriter {
 
     writeCustomers(fileName: string, customers: Customer[]) {
         if (customers.length === 0) {
-            throw new Error("No customers provided");
+            throw new Error("No customer provided");
+        }
+        if(!fileName){
+            throw new Error("No file name provided");
         }
         for (let index = 0; index < customers.length; index++) {
             const customer = customers[index];
