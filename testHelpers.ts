@@ -20,3 +20,7 @@ export function createCustomerCsvFileWriterMock(fileSystemWriter : FileSystemWri
 export function createCustomer (name: string, contactNumber: string) : Customer {
     return new Customer(name, contactNumber);
 }
+
+export function assertBatchCustomerCsvFileWriter( fileSystemWriter: FileSystemWriter, index:number, fileName: string, customer: Customer) {
+    expect(fileSystemWriter.writeLine).toHaveBeenNthCalledWith(index + 1, fileName, `${customer.name},${customer.contactNumber}`);
+}

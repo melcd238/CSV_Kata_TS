@@ -1,6 +1,6 @@
 import { Customer } from "./customer";
 import { BatchCustomerCsvFileWriter } from "./BatchCustomerCsvFileWriter";
-import { createFileSystemWriterMock, createCustomerCsvFileWriterMock, createCustomer } from "./testHelpers";
+import {assertBatchCustomerCsvFileWriter, createFileSystemWriterMock, createCustomerCsvFileWriterMock, createCustomer } from "./testHelpers";
 
 
 describe("BatchCustomerCsvFileWriter", () => {
@@ -20,7 +20,7 @@ describe("BatchCustomerCsvFileWriter", () => {
             // Assert
             expect(fileSystemWriter.writeLine).toHaveBeenCalledTimes(customers.length);
             customers.forEach((customer, index) => {
-                expect(fileSystemWriter.writeLine).toHaveBeenNthCalledWith(index + 1, fileName, `${customer.name},${customer.contactNumber}`);
+                assertBatchCustomerCsvFileWriter(fileSystemWriter, index, fileName, customer);
             });
         });
     });
@@ -50,7 +50,7 @@ describe("BatchCustomerCsvFileWriter", () => {
             // Assert
             expect(fileSystemWriter.writeLine).toHaveBeenCalledTimes(customers.length);
             customers.forEach((customer, index) => {
-                expect(fileSystemWriter.writeLine).toHaveBeenNthCalledWith(index + 1, fileName, `${customer.name},${customer.contactNumber}`);
+                assertBatchCustomerCsvFileWriter(fileSystemWriter, index, fileName, customer);
             });
         });
     });
@@ -82,9 +82,8 @@ describe("BatchCustomerCsvFileWriter", () => {
             // Assert
             expect(fileSystemWriter.writeLine).toHaveBeenCalledTimes(customers.length);
             customers.forEach((customer, index) => {
-                const fileIndex = Math.floor(index / batchSize) + 1;
-                const fileName = `customers${fileIndex}.csv`;
-                expect(fileSystemWriter.writeLine).toHaveBeenNthCalledWith(index + 1, fileName, `${customer.name},${customer.contactNumber}`);
+                const fileName = createFileName(index, batchSize);
+               assertBatchCustomerCsvFileWriter(fileSystemWriter, index, fileName, customer);
             });
 
         });
@@ -129,9 +128,8 @@ describe("BatchCustomerCsvFileWriter", () => {
             // Assert
             expect(fileSystemWriter.writeLine).toHaveBeenCalledTimes(customers.length);
             customers.forEach((customer, index) => {
-                const fileIndex = Math.floor(index / batchSize) + 1;
-                const fileName = `customers${fileIndex}.csv`;
-                expect(fileSystemWriter.writeLine).toHaveBeenNthCalledWith(index + 1, fileName, `${customer.name},${customer.contactNumber}`);
+               const fileName = createFileName(index, batchSize);
+               assertBatchCustomerCsvFileWriter(fileSystemWriter, index, fileName, customer);
             });
 
         });
@@ -143,3 +141,8 @@ describe("BatchCustomerCsvFileWriter", () => {
 
 });
 
+
+function createFileName(index: number, bacthSize: number): string {
+    const fileName = `customers${Math.floor(index / bacthSize) + 1}.csv`;
+    return fileName;
+}
