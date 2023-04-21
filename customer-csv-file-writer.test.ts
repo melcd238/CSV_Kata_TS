@@ -34,14 +34,14 @@ describe('CustomerCsvFileWriter', () => {
        const action = () => sut.writeCustomers(fileName,[customer]);
         // Assert
         expect(action).toThrowError("No file name provided");
-
+        expect(fileSystemWriter.writeLine).not.toHaveBeenCalled();
         });
     });
     describe('one customer', () => {
         test.each([
             {customer: createCustomer("Peter Wiles","12345697123")},
             {customer: createCustomer("John Smith","45345697123")}
-        ])("given customer $expected", ({customer})=>{
+        ])("given customer $customer", ({customer})=>{
         // Arrange
         const fileSystemWriter = createFileSystemWriterMock();
         const sut = createCustomerCsvFileWriterMock(fileSystemWriter);
