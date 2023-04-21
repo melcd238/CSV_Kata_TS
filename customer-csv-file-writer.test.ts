@@ -5,9 +5,7 @@
 // Interface Segregation Principle
 // Dependency Inversion Principle
 
-import { Customer } from './customer';
-import { CustomerCsvFileWriter } from './customer-csv-file-writer';
-import { FileSystemWriter } from './file-writer-interface';
+import { assertCustomerWrittenToCsvFile, createCustomer, createCustomerCsvFileWriterMock, createFileSystemWriterMock } from './testHelpers';
 
 describe('CustomerCsvFileWriter', () => {
     describe('no customers', () => {
@@ -72,21 +70,3 @@ describe('CustomerCsvFileWriter', () => {
        });
    });
 });
-
-function assertCustomerWrittenToCsvFile(fileName: string, customer: Customer, fileSystemWriter: FileSystemWriter) {
-    expect(fileSystemWriter.writeLine).toBeCalledWith(fileName, `${customer.name},${customer.contactNumber}`);
-}
-
-function createFileSystemWriterMock() : FileSystemWriter {
-   return {
-         writeLine: jest.fn()
-   }
-}
-
-function createCustomerCsvFileWriterMock(fileSystemWriter : FileSystemWriter) {
-    return new CustomerCsvFileWriter(fileSystemWriter);
-}
-
-function createCustomer (name: string, contactNumber: string) : Customer {
-    return new Customer(name, contactNumber);
-}
