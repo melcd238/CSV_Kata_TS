@@ -10,5 +10,13 @@ export class BatchCustomerCsvFileWriter {
         if (customers.length <= batchSize) {
            this.customerCsvFileWriter.writeCustomers(fileName, customers);
         }
+        // si le customers.length est plus grand que le batchSize mais inferieur a 2 fois le batchSize on doit créer 2 fichiers un fichier avec 10 customers et un fichier les customers restants
+        else if (customers.length > batchSize && customers.length < batchSize * 2) {
+            const firstBatch = customers.slice(0, batchSize);
+            const secondBatch = customers.slice(batchSize);
+            this.customerCsvFileWriter.writeCustomers("customers1.csv", firstBatch);
+            this.customerCsvFileWriter.writeCustomers("customers2.csv", secondBatch);
+        }
+
     }
 };

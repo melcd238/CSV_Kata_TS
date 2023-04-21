@@ -66,8 +66,6 @@ describe("BatchCustomerCsvFileWriter", () => {
                 writeLine: jest.fn()
             }
             const sut = new BatchCustomerCsvFileWriter(new CustomerCsvFileWriter(fileSystemWriter));
-            const fileName1 = "customers1.csv";
-            const fileName2 = "customers2.csv";
             const customers: Customer[] = [
                 new Customer("John", "123456789"),
                 new Customer("Jane", "987654321"),
@@ -85,18 +83,15 @@ describe("BatchCustomerCsvFileWriter", () => {
             const batchSize = 10;
 
             // Act
-            sut.writeCustomersInBatches(fileName1, customers, batchSize);
+            sut.writeCustomersInBatches("customers.csv", customers, batchSize);
 
             // Assert
             expect(fileSystemWriter.writeLine).toHaveBeenCalledTimes(customers.length);
             customers.forEach((customer, index) => {
-                if(index < batchSize){
-                    expect(fileSystemWriter.writeLine).toHaveBeenNthCalledWith(index + 1, fileName1, `${customer.name},${customer.contactNumber}`);
-                }else{
-                    expect(fileSystemWriter.writeLine).toHaveBeenNthCalledWith(index + 1, fileName2, `${customer.name},${customer.contactNumber}`);
-                }
-            }
-            );
+                const fileIndex = Math.floor(index / batchSize) + 1;
+                const fileName = `customers${fileIndex}.csv`;
+                expect(fileSystemWriter.writeLine).toHaveBeenNthCalledWith(index + 1, fileName, `${customer.name},${customer.contactNumber}`);
+            });
 
         });
     });
