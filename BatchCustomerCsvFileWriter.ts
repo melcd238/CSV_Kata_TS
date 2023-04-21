@@ -6,8 +6,8 @@ export class BatchCustomerCsvFileWriter {
 
     writeCustomersInBatches(fileName: string, customers: Customer[], batchSize: number) {
         batchSize= 10;
-        
-        if (customers.length < batchSize) {
+
+        if (customers.length <= batchSize) {
            this.customerCsvFileWriter.writeCustomers(fileName, customers);
         }
     }

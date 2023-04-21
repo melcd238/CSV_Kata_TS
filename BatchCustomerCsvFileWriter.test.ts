@@ -26,6 +26,38 @@ describe("BatchCustomerCsvFileWriter", () => {
             });
         });
     });
-    
+    describe('total customers is equal to batch size', () => {
+        test('should generate one file when total customers is equal to batch size', () => {
+            // Arrange
+            const fileSystemWriter :FileSystemWriter ={
+                writeLine: jest.fn()
+            }
+            const sut = new BatchCustomerCsvFileWriter(new CustomerCsvFileWriter(fileSystemWriter));
+            const fileName = "customers2.csv";
+            const customers: Customer[] = [
+                new Customer("John", "123456789"),
+                new Customer("Jane", "987654321"),
+                new Customer("Jack", "456789123"),
+                new Customer("Jill", "123456789"),
+                new Customer("Jenny", "987654321"),
+                new Customer("Jasper", "456789123"),
+                new Customer("Jasmine", "123456789"),
+                new Customer("Jared", "987654321"),
+                new Customer("Jarod", "456789123"),
+                new Customer ("Lola", "123456789"),
+            ]
+            const batchSize = 10;
+
+            // Act
+            sut.writeCustomersInBatches(fileName, customers, batchSize);
+
+            // Assert
+            expect(fileSystemWriter.writeLine).toHaveBeenCalledTimes(customers.length);
+            customers.forEach((customer, index) => {
+                expect(fileSystemWriter.writeLine).toHaveBeenNthCalledWith(index + 1, fileName, `${customer.name},${customer.contactNumber}`);
+            });
+        });
+    });
+
 });
 
