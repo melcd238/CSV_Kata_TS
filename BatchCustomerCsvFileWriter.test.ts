@@ -59,5 +59,49 @@ describe("BatchCustomerCsvFileWriter", () => {
         });
     });
 
+    describe('total customers is greater than batch size and less than bacthSize multipled by 2 ', () => {
+        test('should generate two files when total customers is greater than batch size and less than bacthSize multipled by 2', () => {
+            // Arrange
+            const fileSystemWriter :FileSystemWriter ={
+                writeLine: jest.fn()
+            }
+            const sut = new BatchCustomerCsvFileWriter(new CustomerCsvFileWriter(fileSystemWriter));
+            const fileName1 = "customers1.csv";
+            const fileName2 = "customers2.csv";
+            const customers: Customer[] = [
+                new Customer("John", "123456789"),
+                new Customer("Jane", "987654321"),
+                new Customer("Jack", "456789123"),
+                new Customer("Jill", "123456789"),
+                new Customer("Jenny", "987654321"),
+                new Customer("Jasper", "456789123"),
+                new Customer("Jasmine", "123456789"),
+                new Customer("Jared", "987654321"),
+                new Customer("Jarod", "456789123"),
+                new Customer ("Lola", "123456789"),
+                new Customer("Jleo", "123456789"),
+                new Customer("Ced", "987654321"),
+            ]
+            const batchSize = 10;
+
+            // Act
+            sut.writeCustomersInBatches(fileName1, customers, batchSize);
+
+            // Assert
+            expect(fileSystemWriter.writeLine).toHaveBeenCalledTimes(customers.length);
+            customers.forEach((customer, index) => {
+                if(index < batchSize){
+                    expect(fileSystemWriter.writeLine).toHaveBeenNthCalledWith(index + 1, fileName1, `${customer.name},${customer.contactNumber}`);
+                }else{
+                    expect(fileSystemWriter.writeLine).toHaveBeenNthCalledWith(index + 1, fileName2, `${customer.name},${customer.contactNumber}`);
+                }
+            }
+            );
+
+        });
+    });
+
+        
+
 });
 
