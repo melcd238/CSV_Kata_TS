@@ -5,6 +5,6 @@ export class BatchCustomerCsvFileWriter {
     constructor(private customerCsvFileWriter: CustomerCsvFileWriter) {}
 
     writeCustomersInBatches(fileName: string, customers: Customer[], batchSize: number) {
-        
+        batchSize= 10;
     }
 };
