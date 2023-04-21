@@ -1,19 +1,17 @@
 import { Customer } from "./customer";
-import { FileSystemWriter } from "./file-writer-interface";
-import { CustomerCsvFileWriter } from "./customer-csv-file-writer";
 import { BatchCustomerCsvFileWriter } from "./BatchCustomerCsvFileWriter";
+import { createFileSystemWriterMock, createCustomerCsvFileWriterMock, createCustomer } from "./testHelpers";
 
 
 describe("BatchCustomerCsvFileWriter", () => {
     describe('total customers less than batch size', () => {
         test('should generate one file when total customers less than batch size', () => {
             // Arrange
-            const fileSystemWriter :FileSystemWriter ={
-                writeLine: jest.fn()
-            }
-            const sut = new BatchCustomerCsvFileWriter(new CustomerCsvFileWriter(fileSystemWriter));
+            const fileSystemWriter = createFileSystemWriterMock();
+            const sut = new BatchCustomerCsvFileWriter(createCustomerCsvFileWriterMock(fileSystemWriter));
             const fileName = "customers1.csv";
-            const customers: Customer[] = [new Customer("John", "123456789"), new Customer("Jane", "987654321"), new Customer("Jack", "456789123")];
+            const customers: Customer[] = [createCustomer("John", "123456789"),createCustomer("Jane", "987654321"), createCustomer("Jack", "456789123")];
+            
             const batchSize = 10;
 
             // Act
@@ -29,22 +27,20 @@ describe("BatchCustomerCsvFileWriter", () => {
     describe('total customers is equal to batch size', () => {
         test('should generate one file when total customers is equal to batch size', () => {
             // Arrange
-            const fileSystemWriter :FileSystemWriter ={
-                writeLine: jest.fn()
-            }
-            const sut = new BatchCustomerCsvFileWriter(new CustomerCsvFileWriter(fileSystemWriter));
-            const fileName = "customers2.csv";
+            const fileSystemWriter = createFileSystemWriterMock();
+            const sut = new BatchCustomerCsvFileWriter(createCustomerCsvFileWriterMock(fileSystemWriter));
+            const fileName = "cust1.csv";
             const customers: Customer[] = [
-                new Customer("John", "123456789"),
-                new Customer("Jane", "987654321"),
-                new Customer("Jack", "456789123"),
-                new Customer("Jill", "123456789"),
-                new Customer("Jenny", "987654321"),
-                new Customer("Jasper", "456789123"),
-                new Customer("Jasmine", "123456789"),
-                new Customer("Jared", "987654321"),
-                new Customer("Jarod", "456789123"),
-                new Customer ("Lola", "123456789"),
+                createCustomer("John", "123456789"),
+                createCustomer("Jane", "987654321"),
+                createCustomer("Jack", "456789123"),
+                createCustomer("Jill", "123456789"),
+                createCustomer("Jenny", "987654321"),
+                createCustomer("Jasper", "456789123"),
+                createCustomer("Jasmine", "123456789"),
+                createCustomer("Jared", "987654321"),
+                createCustomer("Jarod", "456789123"),
+                createCustomer("Lola", "123456789"),
             ]
             const batchSize = 10;
 
@@ -62,23 +58,21 @@ describe("BatchCustomerCsvFileWriter", () => {
     describe('total customers is greater than batch size and less than bacthSize multipled by 2 ', () => {
         test('should generate two files when total customers is greater than batch size and less than bacthSize multipled by 2', () => {
             // Arrange
-            const fileSystemWriter :FileSystemWriter ={
-                writeLine: jest.fn()
-            }
-            const sut = new BatchCustomerCsvFileWriter(new CustomerCsvFileWriter(fileSystemWriter));
+            const fileSystemWriter = createFileSystemWriterMock();
+            const sut = new BatchCustomerCsvFileWriter(createCustomerCsvFileWriterMock(fileSystemWriter));
             const customers: Customer[] = [
-                new Customer("John", "123456789"),
-                new Customer("Jane", "987654321"),
-                new Customer("Jack", "456789123"),
-                new Customer("Jill", "123456789"),
-                new Customer("Jenny", "987654321"),
-                new Customer("Jasper", "456789123"),
-                new Customer("Jasmine", "123456789"),
-                new Customer("Jared", "987654321"),
-                new Customer("Jarod", "456789123"),
-                new Customer ("Lola", "123456789"),
-                new Customer("Jleo", "123456789"),
-                new Customer("Ced", "987654321"),
+                createCustomer("John", "123456789"),
+                createCustomer("Jane", "987654321"),
+                createCustomer("Jack", "456789123"),
+                createCustomer("Jill", "123456789"),
+                createCustomer("Jenny", "987654321"),
+                createCustomer("Jasper", "456789123"),
+                createCustomer("Jasmine", "123456789"),
+                createCustomer("Jared", "987654321"),
+                createCustomer("Jarod", "456789123"),
+                createCustomer("Lola", "123456789"),
+                createCustomer("Jleo", "123456789"),
+                createCustomer("Ced", "987654321"),
             ]
             const batchSize = 10;
 
@@ -99,35 +93,33 @@ describe("BatchCustomerCsvFileWriter", () => {
     describe('total customers is greater than batch size and greater than bacthSize multipled by 2 and less than batchSize multiplied by 3 ', () => {
         test('should generate three files when total customers is greater than batch size and greater than bacthSize multipled by 2 and less than batchSize multiplied by 3 ', () => {
             // Arrange
-            const fileSystemWriter :FileSystemWriter ={
-                writeLine: jest.fn()
-            }
-            const sut = new BatchCustomerCsvFileWriter(new CustomerCsvFileWriter(fileSystemWriter));
+            const fileSystemWriter = createFileSystemWriterMock();
+            const sut = new BatchCustomerCsvFileWriter(createCustomerCsvFileWriterMock(fileSystemWriter));
             const customers: Customer[] = [
-                new Customer("John", "123456789"),
-                new Customer("Jane", "987654321"),
-                new Customer("Jack", "456789123"),
-                new Customer("Jill", "123456789"),
-                new Customer("Jenny", "987654321"),
-                new Customer("Jasper", "456789123"),
-                new Customer("Jasmine", "123456789"),
-                new Customer("Jared", "987654321"),
-                new Customer("Jarod", "456789123"),
-                new Customer ("Lola", "123456789"),
-                new Customer("Jleo", "123456789"),
-                new Customer("Ced", "987654321"),
-                new Customer("John", "123456789"),
-                new Customer("Jane", "987654321"),
-                new Customer("Jack", "456789123"),
-                new Customer("Jill", "123456789"),
-                new Customer("Jenny", "987654321"),
-                new Customer("Jasper", "456789123"),
-                new Customer("Jasmine", "123456789"),
-                new Customer("Jared", "987654321"),
-                new Customer("Jarod", "456789123"),
-                new Customer ("Lola", "123456789"),
-                new Customer("Jleo", "123456789"),
-                new Customer("Ced", "987654321"),
+                createCustomer("John", "123456789"),
+                createCustomer("Jane", "987654321"),
+                createCustomer("Jack", "456789123"),
+                createCustomer("Jill", "123456789"),
+                createCustomer("Jenny", "987654321"),
+                createCustomer("Jasper", "456789123"),
+                createCustomer("Jasmine", "123456789"),
+                createCustomer("Jared", "987654321"),
+                createCustomer("Jarod", "456789123"),
+                createCustomer("Lola", "123456789"),
+                createCustomer("Jleo", "123456789"),
+                createCustomer("Ced", "987654321"),
+                createCustomer("John", "123456789"),
+                createCustomer("Jane", "987654321"),
+                createCustomer("Jack", "456789123"),
+                createCustomer("Jill", "123456789"),
+                createCustomer("Jenny", "987654321"),
+                createCustomer("Jasper", "456789123"),
+                createCustomer("Jasmine", "123456789"),
+                createCustomer("Jared", "987654321"),
+                createCustomer("Jarod", "456789123"),
+                createCustomer("Lola", "123456789"),
+                createCustomer("Jleo", "123456789"),
+                createCustomer("Ced", "987654321"),
             ]
             const batchSize = 10;
 
