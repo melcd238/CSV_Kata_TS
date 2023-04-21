@@ -96,6 +96,57 @@ describe("BatchCustomerCsvFileWriter", () => {
         });
     });
 
+    describe('total customers is greater than batch size and greater than bacthSize multipled by 2 and less than batchSize multiplied by 3 ', () => {
+        test('should generate three files when total customers is greater than batch size and greater than bacthSize multipled by 2 and less than batchSize multiplied by 3 ', () => {
+            // Arrange
+            const fileSystemWriter :FileSystemWriter ={
+                writeLine: jest.fn()
+            }
+            const sut = new BatchCustomerCsvFileWriter(new CustomerCsvFileWriter(fileSystemWriter));
+            const customers: Customer[] = [
+                new Customer("John", "123456789"),
+                new Customer("Jane", "987654321"),
+                new Customer("Jack", "456789123"),
+                new Customer("Jill", "123456789"),
+                new Customer("Jenny", "987654321"),
+                new Customer("Jasper", "456789123"),
+                new Customer("Jasmine", "123456789"),
+                new Customer("Jared", "987654321"),
+                new Customer("Jarod", "456789123"),
+                new Customer ("Lola", "123456789"),
+                new Customer("Jleo", "123456789"),
+                new Customer("Ced", "987654321"),
+                new Customer("John", "123456789"),
+                new Customer("Jane", "987654321"),
+                new Customer("Jack", "456789123"),
+                new Customer("Jill", "123456789"),
+                new Customer("Jenny", "987654321"),
+                new Customer("Jasper", "456789123"),
+                new Customer("Jasmine", "123456789"),
+                new Customer("Jared", "987654321"),
+                new Customer("Jarod", "456789123"),
+                new Customer ("Lola", "123456789"),
+                new Customer("Jleo", "123456789"),
+                new Customer("Ced", "987654321"),
+            ]
+            const batchSize = 10;
+
+            // Act
+            sut.writeCustomersInBatches("customers.csv", customers, batchSize);
+
+            // Assert
+            expect(fileSystemWriter.writeLine).toHaveBeenCalledTimes(customers.length);
+            customers.forEach((customer, index) => {
+                const fileIndex = Math.floor(index / batchSize) + 1;
+                const fileName = `customers${fileIndex}.csv`;
+                expect(fileSystemWriter.writeLine).toHaveBeenNthCalledWith(index + 1, fileName, `${customer.name},${customer.contactNumber}`);
+            });
+
+        });
+    
+    });
+
+
         
 
 });
