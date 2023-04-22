@@ -136,7 +136,31 @@ describe("BatchCustomerCsvFileWriter", () => {
     
     });
 
+    describe ('batchSize is now 15 000 and total customers is greater than 15 000 and less than 30 000', () => {
+        test('should generate two files when batchSize is now 15 000 and total customers is greater than 15 000 and less than 30 000', () => {
 
+            // Arrange
+            const fileSystemWriter = createFileSystemWriterMock();
+            const sut = new BatchCustomerCsvFileWriter(createCustomerCsvFileWriterMock(fileSystemWriter));
+            const customers: Customer[] = Array.from({length : 16000}, (_,i) =>{
+                const name = `Customer${i}`;
+                const contactNumber = `123456789${i}`;
+                return createCustomer(name, contactNumber);
+            })
+            const batchSize = 15000;
+
+            // Act
+            sut.writeCustomersInBatches("customers.csv", customers, batchSize);
+
+            // Assert
+            expect(fileSystemWriter.writeLine).toHaveBeenCalledTimes(customers.length);
+            customers.forEach((customer, index) => {
+               const fileName = createFileName(index, batchSize);
+               assertBatchCustomerCsvFileWriter(fileSystemWriter, index, fileName, customer);
+            });
+
+        });
+    });     
         
 
 });

@@ -21,3 +21,10 @@ L'équipe d'administration système utilise votre générateur CSV, mais rencont
 
 Lorsque vous modifiez le code pour permettre le traitement par lots, faites attention au principe d'ouverture/fermeture. Évitez d'utiliser des arguments par défaut dans les méthodes et réfléchissez à la meilleure façon d'ÉTENDRE la classe. Évitez de modifier les méthodes publiques existantes. À la place, étendez la classe en créant une surcharge ou une autre nouvelle méthode pour gérer la nouvelle exigence.
 
+## Scénario - Kata n°3
+
+L'équipe d'administration système a résolu le problème d'importation des gros fichiers et a maintenant besoin que le générateur CSV soit modifié pour créer des lots de 15 000 pour le travail nocturne.
+
+## Conseil
+
+Vous devez vous assurer que le système peut continuer à prendre en charge des lots de 10 en plus des lots de 15 000.
