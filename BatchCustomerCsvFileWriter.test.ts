@@ -1,6 +1,6 @@
 import { Customer } from "./customer";
 import { BatchCustomerCsvFileWriter } from "./BatchCustomerCsvFileWriter";
-import {assertBatchCustomerCsvFileWriter, createFileSystemWriterMock, createCustomerCsvFileWriterMock, createCustomer } from "./testHelpers";
+import {assertBatchCustomerCsvFileWriter, createFileSystemWriterMock, createCustomerCsvFileWriterMock, createCustomer, createICustomerCsvFileWriterMock } from "./testHelpers";
 
 
 describe("BatchCustomerCsvFileWriter", () => {
@@ -8,9 +8,10 @@ describe("BatchCustomerCsvFileWriter", () => {
         test('should generate one file when total customers less than batch size', () => {
             // Arrange
             const fileSystemWriter = createFileSystemWriterMock();
-            const sut = new BatchCustomerCsvFileWriter(createCustomerCsvFileWriterMock(fileSystemWriter));
+            const customerCsvFileWriterMock = createCustomerCsvFileWriterMock(fileSystemWriter);
+            const sut = new BatchCustomerCsvFileWriter(customerCsvFileWriterMock);
             const fileName = "customers1.csv";
-            const customers: Customer[] = [createCustomer("John", "123456789"),createCustomer("Jane", "987654321"), createCustomer("Jack", "456789123")];
+            const customers: Customer[] = generateCustomersArray(5);
             
             const batchSize = 10;
 
@@ -28,20 +29,10 @@ describe("BatchCustomerCsvFileWriter", () => {
         test('should generate one file when total customers is equal to batch size', () => {
             // Arrange
             const fileSystemWriter = createFileSystemWriterMock();
-            const sut = new BatchCustomerCsvFileWriter(createCustomerCsvFileWriterMock(fileSystemWriter));
+            const customerCsvFileWriterMock = createCustomerCsvFileWriterMock(fileSystemWriter);
+            const sut = new BatchCustomerCsvFileWriter(customerCsvFileWriterMock);
             const fileName = "cust1.csv";
-            const customers: Customer[] = [
-                createCustomer("John", "123456789"),
-                createCustomer("Jane", "987654321"),
-                createCustomer("Jack", "456789123"),
-                createCustomer("Jill", "123456789"),
-                createCustomer("Jenny", "987654321"),
-                createCustomer("Jasper", "456789123"),
-                createCustomer("Jasmine", "123456789"),
-                createCustomer("Jared", "987654321"),
-                createCustomer("Jarod", "456789123"),
-                createCustomer("Lola", "123456789"),
-            ]
+            const customers: Customer[] = generateCustomersArray(10);
             const batchSize = 10;
 
             // Act
@@ -59,21 +50,9 @@ describe("BatchCustomerCsvFileWriter", () => {
         test('should generate two files when total customers is greater than batch size and less than bacthSize multipled by 2', () => {
             // Arrange
             const fileSystemWriter = createFileSystemWriterMock();
-            const sut = new BatchCustomerCsvFileWriter(createCustomerCsvFileWriterMock(fileSystemWriter));
-            const customers: Customer[] = [
-                createCustomer("John", "123456789"),
-                createCustomer("Jane", "987654321"),
-                createCustomer("Jack", "456789123"),
-                createCustomer("Jill", "123456789"),
-                createCustomer("Jenny", "987654321"),
-                createCustomer("Jasper", "456789123"),
-                createCustomer("Jasmine", "123456789"),
-                createCustomer("Jared", "987654321"),
-                createCustomer("Jarod", "456789123"),
-                createCustomer("Lola", "123456789"),
-                createCustomer("Jleo", "123456789"),
-                createCustomer("Ced", "987654321"),
-            ]
+            const customerCsvFileWriterMock = createCustomerCsvFileWriterMock(fileSystemWriter);
+            const sut = new BatchCustomerCsvFileWriter(customerCsvFileWriterMock);
+            const customers: Customer[] = generateCustomersArray(12)
             const batchSize = 10;
 
             // Act
@@ -93,33 +72,9 @@ describe("BatchCustomerCsvFileWriter", () => {
         test('should generate three files when total customers is greater than batch size and greater than bacthSize multipled by 2 and less than batchSize multiplied by 3 ', () => {
             // Arrange
             const fileSystemWriter = createFileSystemWriterMock();
-            const sut = new BatchCustomerCsvFileWriter(createCustomerCsvFileWriterMock(fileSystemWriter));
-            const customers: Customer[] = [
-                createCustomer("John", "123456789"),
-                createCustomer("Jane", "987654321"),
-                createCustomer("Jack", "456789123"),
-                createCustomer("Jill", "123456789"),
-                createCustomer("Jenny", "987654321"),
-                createCustomer("Jasper", "456789123"),
-                createCustomer("Jasmine", "123456789"),
-                createCustomer("Jared", "987654321"),
-                createCustomer("Jarod", "456789123"),
-                createCustomer("Lola", "123456789"),
-                createCustomer("Jleo", "123456789"),
-                createCustomer("Ced", "987654321"),
-                createCustomer("Johna", "123456789"),
-                createCustomer("Janee", "987654321"),
-                createCustomer("Jacky", "456789123"),
-                createCustomer("Jilly", "123456789"),
-                createCustomer("Jennye", "987654321"),
-                createCustomer("Jaspere", "456789123"),
-                createCustomer("Jasmina", "123456789"),
-                createCustomer("Jar", "987654321"),
-                createCustomer("James", "456789123"),
-                createCustomer("Lolita", "123456789"),
-                createCustomer("Leota", "123456789"),
-                createCustomer("Cedo", "987654321"),
-            ]
+            const customerCsvFileWriterMock = createCustomerCsvFileWriterMock(fileSystemWriter);
+            const sut = new BatchCustomerCsvFileWriter(customerCsvFileWriterMock);
+            const customers: Customer[] = generateCustomersArray(25);
             const batchSize = 10;
 
             // Act
@@ -141,12 +96,9 @@ describe("BatchCustomerCsvFileWriter", () => {
 
             // Arrange
             const fileSystemWriter = createFileSystemWriterMock();
-            const sut = new BatchCustomerCsvFileWriter(createCustomerCsvFileWriterMock(fileSystemWriter));
-            const customers: Customer[] = Array.from({length : 16000}, (_,i) =>{
-                const name = `Customer${i}`;
-                const contactNumber = `123456789${i}`;
-                return createCustomer(name, contactNumber);
-            })
+            const customerCsvFileWriterMock = createCustomerCsvFileWriterMock(fileSystemWriter);
+            const sut = new BatchCustomerCsvFileWriter(customerCsvFileWriterMock);
+            const customers: Customer[] = generateCustomersArray(20000);
             const batchSize = 15000;
 
             // Act
@@ -169,4 +121,12 @@ describe("BatchCustomerCsvFileWriter", () => {
 function createFileName(index: number, bacthSize: number): string {
     const fileName = `customers${Math.floor(index / bacthSize) + 1}.csv`;
     return fileName;
+}
+
+function generateCustomersArray(totalCustomers: number): Customer[] {
+   return Array.from({length : totalCustomers}, (_,i) =>{
+        const name = `Customer${i}`;
+        const contactNumber = `123456789${i}`;
+        return createCustomer(name, contactNumber);
+    });
 }
