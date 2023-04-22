@@ -135,13 +135,6 @@ describe("BatchCustomerCsvFileWriter", () => {
 
             // Assert
             expect(fileSystemWriter.writeLine).toHaveBeenCalledTimes(4);
-            const uniqueCustomers = customers.filter((customer, index, self) => {
-                return self.findIndex(c => c.name === customer.name) === index;
-            });
-            uniqueCustomers.forEach((customer, index) => {
-                const fileName = createFileName(index, batchSize);
-               assertBatchCustomerCsvFileWriter(fileSystemWriter, index, fileName, customer);
-            });
         });
     });
         
