@@ -1,8 +1,8 @@
 import { Customer } from "./customer";
-import { CustomerCsvFileWriter } from "./customer-csv-file-writer";
+import { ICustomerCsvFileWriter } from "./customerCsvFileWriter-interface";
 
 export class BatchCustomerCsvFileWriter {
-    constructor(private customerCsvFileWriter: CustomerCsvFileWriter) {}
+    constructor(private customerCsvFileWriter: ICustomerCsvFileWriter) {}
 
     writeCustomersInBatches(fileName: string, customers: Customer[], batchSize: number) {
        const numberOfBatches = Math.ceil(customers.length / batchSize);

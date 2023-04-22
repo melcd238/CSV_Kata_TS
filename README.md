@@ -28,3 +28,11 @@ L'équipe d'administration système a résolu le problème d'importation des gro
 ## Conseil
 
 Vous devez vous assurer que le système peut continuer à prendre en charge des lots de 10 en plus des lots de 15 000.
+
+## Scénario - Kata n°4
+
+L'équipe des ventes est venue vous demander de modifier le générateur de fichiers CSV afin de supprimer les entrées en double des fichiers créés pour l'importation, car cela cause des problèmes dans leur système CRM. Un doublon est défini comme un enregistrement ayant le même nom.
+
+## Conseil
+
+C'est la 3ème fois que vous devez modifier la même section de votre code en raison d'une nouvelle exigence. Envisagez de généraliser maintenant si vous ne l'avez pas déjà fait.

@@ -1,8 +1,8 @@
 import { FileSystemWriter } from "./file-writer-interface";
 import { Customer } from "./customer";
+import { ICustomerCsvFileWriter } from "./customerCsvFileWriter-interface";
 
-
-export class CustomerCsvFileWriter {
+export class CustomerCsvFileWriter implements ICustomerCsvFileWriter {
    constructor(private fileSystemWriter: FileSystemWriter) { }
 
     writeCustomers(fileName: string, customers: Customer[]) {
