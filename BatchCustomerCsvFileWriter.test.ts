@@ -112,7 +112,38 @@ describe("BatchCustomerCsvFileWriter", () => {
             });
 
         });
-    });     
+    }); 
+    
+    describe('duplicate customer', () => {
+        test('should remove duplicate customer before writing to file', () => {
+
+            // Arrange
+            const fileSystemWriter = createFileSystemWriterMock();
+            const customerCsvFileWriterMock = createCustomerCsvFileWriterMock(fileSystemWriter);
+            const sut = new BatchCustomerCsvFileWriter(customerCsvFileWriterMock);
+            const customers: Customer[] = [
+                createCustomer("Customer1", "1234567891"),
+                createCustomer("Customer1", "1234567891"),
+                createCustomer("Customer2", "1234567892"),
+                createCustomer("Customer3", "1234567893"),
+                createCustomer("Customer4", "1234567894"),
+            ]
+            const batchSize = 10;
+
+            // Act
+            sut.writeCustomersInBatches("customers.csv", customers, batchSize);
+
+            // Assert
+            expect(fileSystemWriter.writeLine).toHaveBeenCalledTimes(4);
+            const uniqueCustomers = customers.filter((customer, index, self) => {
+                return self.findIndex(c => c.name === customer.name) === index;
+            });
+            uniqueCustomers.forEach((customer, index) => {
+                const fileName = createFileName(index, batchSize);
+               assertBatchCustomerCsvFileWriter(fileSystemWriter, index, fileName, customer);
+            });
+        });
+    });
         
 
 });
