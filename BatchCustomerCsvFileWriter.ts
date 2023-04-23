@@ -7,6 +7,8 @@ export class BatchCustomerCsvFileWriter {
     writeCustomersInBatches(fileName: string, customers: Customer[], batchSize: number) {
        const uniqueCustomers = this.removeDuplicateCustomers(customers);
        const numberOfBatches = Math.ceil(uniqueCustomers.length / batchSize);
+      
+
 
         for (let batchIndex = 0; batchIndex < numberOfBatches; batchIndex++) {
             const startIndex = batchIndex * batchSize;
@@ -30,4 +32,5 @@ export class BatchCustomerCsvFileWriter {
             return self.findIndex(c => c.name === customer.name) === index;
         });
     }
+
 };

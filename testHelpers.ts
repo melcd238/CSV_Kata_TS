@@ -27,9 +27,17 @@ export function assertBatchCustomerCsvFileWriter( fileSystemWriter: FileSystemWr
 
 }
 
+export function generateCustomersArray(totalCustomers: number): Customer[] {
+    return Array.from({length : totalCustomers}, (_,i) =>{
+         const name = `Customer${i}`;
+         const contactNumber = `123456789${i}`;
+         return createCustomer(name, contactNumber);
+     });
+ }
 
-export function createICustomerCsvFileWriterMock(): ICustomerCsvFileWriter {
+
+ /*export function createICustomerCsvFileWriterMock(): ICustomerCsvFileWriter {
     return {
         writeCustomers: jest.fn()
     };
-}
+}*/

@@ -1,6 +1,6 @@
 import { Customer } from "./customer";
 import { BatchCustomerCsvFileWriter } from "./BatchCustomerCsvFileWriter";
-import {assertBatchCustomerCsvFileWriter, createFileSystemWriterMock, createCustomerCsvFileWriterMock, createCustomer, createICustomerCsvFileWriterMock } from "./testHelpers";
+import {assertBatchCustomerCsvFileWriter, createFileSystemWriterMock, createCustomerCsvFileWriterMock, createCustomer, generateCustomersArray} from "./testHelpers";
 
 
 describe("BatchCustomerCsvFileWriter", () => {
@@ -129,12 +129,16 @@ describe("BatchCustomerCsvFileWriter", () => {
                 createCustomer("Customer4", "1234567894"),
             ]
             const batchSize = 10;
-
+            const fileName = "customers.csv";
             // Act
-            sut.writeCustomersInBatches("customers.csv", customers, batchSize);
+            sut.writeCustomersInBatches(fileName, customers, batchSize);
 
             // Assert
             expect(fileSystemWriter.writeLine).toHaveBeenCalledTimes(4);
+            const uniqueCustomers =removeDuplicateCustomers(customers);
+            uniqueCustomers.forEach((customer, index) => {
+            assertBatchCustomerCsvFileWriter(fileSystemWriter, index, fileName, customer);
+            });
         });
     });
         
@@ -147,10 +151,8 @@ function createFileName(index: number, bacthSize: number): string {
     return fileName;
 }
 
-function generateCustomersArray(totalCustomers: number): Customer[] {
-   return Array.from({length : totalCustomers}, (_,i) =>{
-        const name = `Customer${i}`;
-        const contactNumber = `123456789${i}`;
-        return createCustomer(name, contactNumber);
+function removeDuplicateCustomers(customers: Customer[]): Customer[] {
+    return customers.filter((customer, index, self) => {
+        return self.findIndex(c => c.name === customer.name) === index;
     });
 }
